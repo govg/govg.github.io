@@ -2,8 +2,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 import           Data.Monoid (mappend)
 import           Hakyll
-import  qualified Data.Set as S
-import           Text.Pandoc.Options
+import	qualified Data.Set as S
+import			 Text.Pandoc.Options
+import			 Skylighting.Styles (pygments, zenburn)
+
 --------------------------------------------------------------------------------
 main :: IO ()
 main = hakyll $ do
@@ -17,13 +19,13 @@ main = hakyll $ do
 
     match (fromList ["about.md", "contact.md", "acads.md"]) $ do
         route   $ setExtension "html"
-        compile $ pandocCompiler
+        compile $ pandocMathCompiler
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
             >>= relativizeUrls
 
     match "posts/*" $ do
         route $ setExtension "html"
-        compile $ pandocCompiler
+        compile $ pandocMathCompiler
             >>= loadAndApplyTemplate "templates/post.html"    postCtx
             >>= loadAndApplyTemplate "templates/default.html" postCtx
             >>= relativizeUrls
@@ -58,8 +60,6 @@ main = hakyll $ do
                 >>= relativizeUrls
 
     match "templates/*" $ compile templateBodyCompiler
-
-
 --------------------------------------------------------------------------------
 postCtx :: Context String
 postCtx =
@@ -75,6 +75,7 @@ pandocMathCompiler =
         writerOptions = defaultHakyllWriterOptions {
                           writerExtensions = newExtensions,
 						  writerHighlight = True,
+						  writerHighlightStyle = zenburn,
                           writerHTMLMathMethod = MathJax ""
                         }
     in pandocCompilerWith defaultHakyllReaderOptions writerOptions
