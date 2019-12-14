@@ -6,7 +6,7 @@ title: Academics
 My thesis advisor is [Prof. Purushottam Kar](http://www.cse.iitk.ac.in/users/purushot/index.php), and my work under his supervision will deal with extreme
 classification methods. 
 
-When I get around to it, I'll put up my resume [here](files/resume.pdf). 
+When I get around to it, I'll put up my resume [here](resume.pdf).
 
 I have credited / am crediting the following courses here at IIT Kanpur : 
 
