@@ -1,3 +1,13 @@
+# Hakyll build artifacts
 _cache/
 _site/
+
+# Stack build artifacts
 .stack-work/
+stack.yaml.lock
+
+# Editor files
+*.swp
+*~
+.vscode/
+.idea/
