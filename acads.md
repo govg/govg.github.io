@@ -30,3 +30,11 @@ Courses with direct applications to quantitative finance and algorithmic decisio
 - **Bayesian Machine Learning** — probabilistic inference, uncertainty quantification
 - **Randomized Algorithms** — probabilistic analysis, streaming algorithms
 - **Design and Analysis of Algorithms** — complexity, data structures
+
+## Teaching
+
+**Machine Learning: Practice and Theory** — ACA Summer School, IIT Kanpur (2017)
+
+Taught a course covering both theoretical foundations and practical applications of
+machine learning at the [ACA Summer School](http://summerschool.cse.iitk.ac.in/).
+Course materials available [here](https://govg.github.io/acass/).
