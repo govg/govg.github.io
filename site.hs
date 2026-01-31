@@ -1,45 +1,47 @@
---------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
-import           Data.Monoid (mappend)
-import           Hakyll
-import           Text.Pandoc.Options
-import           Skylighting.Styles (zenburn)
+
+import Hakyll
+import Text.Pandoc.Options
 
 --------------------------------------------------------------------------------
 main :: IO ()
 main = hakyll $ do
+    -- Static files
     match "images/*" $ do
-        route   idRoute
+        route idRoute
         compile copyFileCompiler
 
     match "*.pdf" $ do
-        route   idRoute
+        route idRoute
         compile copyFileCompiler
 
     match "css/*" $ do
-        route   idRoute
+        route idRoute
         compile compressCssCompiler
 
+    -- Pages
     match (fromList ["about.md", "contact.md", "acads.md"]) $ do
-        route   $ setExtension "html"
+        route $ setExtension "html"
         compile $ pandocMathCompiler
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
             >>= relativizeUrls
 
+    -- Blog posts
     match "posts/*" $ do
         route $ setExtension "html"
         compile $ pandocMathCompiler
-            >>= loadAndApplyTemplate "templates/post.html"    postCtx
+            >>= loadAndApplyTemplate "templates/post.html" postCtx
             >>= loadAndApplyTemplate "templates/default.html" postCtx
             >>= relativizeUrls
 
+    -- Archive page
     create ["archive.html"] $ do
         route idRoute
         compile $ do
             posts <- recentFirst =<< loadAll "posts/*"
             let archiveCtx =
-                    listField "posts" postCtx (return posts) `mappend`
-                    constField "title" "Posts"            `mappend`
+                    listField "posts" postCtx (return posts) <>
+                    constField "title" "Posts" <>
                     defaultContext
 
             makeItem ""
@@ -47,14 +49,14 @@ main = hakyll $ do
                 >>= loadAndApplyTemplate "templates/default.html" archiveCtx
                 >>= relativizeUrls
 
-
+    -- Homepage
     match "index.html" $ do
         route idRoute
         compile $ do
             posts <- recentFirst =<< loadAll "posts/*"
             let indexCtx =
-                    listField "posts" postCtx (return posts) `mappend`
-                    constField "title" "Home"                `mappend`
+                    listField "posts" postCtx (return posts) <>
+                    constField "title" "Home" <>
                     defaultContext
 
             getResourceBody
@@ -62,24 +64,28 @@ main = hakyll $ do
                 >>= loadAndApplyTemplate "templates/default.html" indexCtx
                 >>= relativizeUrls
 
+    -- Templates
     match "templates/*" $ compile templateBodyCompiler
+
 --------------------------------------------------------------------------------
 postCtx :: Context String
 postCtx =
-    dateField "date" "%B %e, %Y" `mappend`
+    dateField "date" "%B %e, %Y" <>
     defaultContext
 
+--------------------------------------------------------------------------------
+-- Pandoc compiler with math support
 pandocMathCompiler :: Compiler (Item String)
 pandocMathCompiler =
-    let defaultExtensions = writerExtensions defaultHakyllWriterOptions
-        newExtensions = foldr enableExtension defaultExtensions
-                          [Ext_tex_math_dollars, Ext_tex_math_double_backslash,
-                           Ext_latex_macros]
-        writerOptions = defaultHakyllWriterOptions {
-                          writerExtensions = newExtensions,
-                          writerHighlightStyle = Just zenburn,
-                          writerHTMLMathMethod = MathJax ""
-                        }
+    let mathExtensions =
+            [ Ext_tex_math_dollars
+            , Ext_tex_math_double_backslash
+            , Ext_latex_macros
+            ]
+        defaultExtensions = writerExtensions defaultHakyllWriterOptions
+        newExtensions = foldr enableExtension defaultExtensions mathExtensions
+        writerOptions = defaultHakyllWriterOptions
+            { writerExtensions = newExtensions
+            , writerHTMLMathMethod = MathJax ""
+            }
     in pandocCompilerWith defaultHakyllReaderOptions writerOptions
-
-
