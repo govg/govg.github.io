@@ -74,8 +74,7 @@ pandocMathCompiler =
         newExtensions = foldr S.insert defaultExtensions mathExtensions
         writerOptions = defaultHakyllWriterOptions {
                           writerExtensions = newExtensions,
-						  writerHighlight = True,
-						  writerHighlightStyle = zenburn,
+                          writerHighlightStyle = Just zenburn,
                           writerHTMLMathMethod = MathJax ""
                         }
     in pandocCompilerWith defaultHakyllReaderOptions writerOptions
