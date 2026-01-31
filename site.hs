@@ -2,9 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 import           Data.Monoid (mappend)
 import           Hakyll
-import	qualified Data.Set as S
-import			 Text.Pandoc.Options
-import			 Skylighting.Styles (pygments, zenburn)
+import           Text.Pandoc.Options
+import           Skylighting.Styles (zenburn)
 
 --------------------------------------------------------------------------------
 main :: IO ()
@@ -68,10 +67,10 @@ postCtx =
 
 pandocMathCompiler :: Compiler (Item String)
 pandocMathCompiler =
-    let mathExtensions = [Ext_tex_math_dollars, Ext_tex_math_double_backslash,
-                          Ext_latex_macros]
-        defaultExtensions = writerExtensions defaultHakyllWriterOptions
-        newExtensions = foldr S.insert defaultExtensions mathExtensions
+    let defaultExtensions = writerExtensions defaultHakyllWriterOptions
+        newExtensions = foldr enableExtension defaultExtensions
+                          [Ext_tex_math_dollars, Ext_tex_math_double_backslash,
+                           Ext_latex_macros]
         writerOptions = defaultHakyllWriterOptions {
                           writerExtensions = newExtensions,
                           writerHighlightStyle = Just zenburn,
